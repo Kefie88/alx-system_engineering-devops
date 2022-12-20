@@ -11,7 +11,7 @@ frontend anemdevop
     default_backend app
 backend app
     balance roundrobin
-    server 30520-web-01 34.236.38.223
-    server 30520-web-02  100.26.158.42 check" >> /etc/haproxy/haproxy.cfg
+    server 58673-web-01 54.90.33.35
+    server 58673-web-02  52.87.153.190 check" >> /etc/haproxy/haproxy.cfg
 
 sudo service haproxy restart
