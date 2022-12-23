@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
-# display information about subdomains
-# domains and subdomains to be passed as arguments to script
-# function for extracting domain and subdomain details from dig
+# Bash script displays DNS records: record type, IP, subdomains
 
-findRecords ()
+print_rec ()
 {
-    r_type="$(dig ${2}.${1} | awk 'NR==14 { print $4 }')"
-    ip_add="$(dig ${2}.${1} | awk 'NR==14 { print $5 }')"
-
-    echo "The subdomain $2 is a $r_type record and points to $ip_add"
+    printf "The subdomain %s is a " "$2"
+    dig "$2.$1" | grep -A1 'ANSWER SECTION:' | awk -F' ' '{ printf $4 }'
+    printf " record and points to "
+    dig "$2.$1" | grep -A1 'ANSWER SECTION:' | awk -F' ' '{ printf $5 }'
+    echo ""
 }
 
-if [ "$#" -ne 2 ];
-then
-    findRecords $1 "www"
-    findRecords $1 "lb-01"
-    findRecords $1 "web-01"
-    findRecords $1 "web-02"
+if [ -z "$2" ]; then
+    for subs in "www" "lb-01" "web-01" "web-02"
+    do
+        print_rec "$1" "$subs"
+    done
 else
-    findRecords $1 $2
+    print_rec "$1" "$2"
 fi
